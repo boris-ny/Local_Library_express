@@ -46,7 +46,10 @@ exports.bookinstance_create_get = asyncHandler(async (req, res, next) => {
 // Handle BookInstance create on POST.
 exports.bookinstance_create_post = [
   // Validate and sanitize fields.
-  body("book", "Book must be specified").trim().isLength({ min: 1 }).escape(),
+  body("book", "Book must be specified")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
   body("imprint", "Imprint must be specified")
     .trim()
     .isLength({ min: 1 })
