@@ -35,11 +35,13 @@ main().catch((err) => console.log(err));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.use(helmet.contentSecurityPolicy({
-  directives: {
-    "script-src": ["self", "code.jquery.com", "cdn.jdeliver.net"],
-  },
-}));
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      "script-src": ["'self'", "code.jquery.com", "cdn.jsdelivr.net"],
+    },
+  })
+);
 // Middleware Handlers
 app.use(compression()); // Compress all routes
 app.use(logger('dev'));
