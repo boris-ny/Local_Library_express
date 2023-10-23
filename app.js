@@ -7,11 +7,17 @@ const compression = require("compression");
 const helmet = require("helmet");
 require('dotenv').config();
 
-const indexRouter = require('./routes/index');
+// const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const catalogRouter = require("./routes/catalog"); //Import routes for "catalog" area of site
 
 const app = express();
+
+app.use(express.static(path.join(__dirname, 'public')));
+// view engine setup
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'));
+app.get("/",(req, res) => res.render("test"))
 
 //Set up Rate limiter:maximum of twenty requests per minute
 
@@ -31,10 +37,7 @@ async function main() {
 }
 main().catch((err) => console.log(err));
 
-app.use(express.static(path.join(__dirname, 'public')));
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+
 
 app.use(
   helmet.contentSecurityPolicy({
@@ -51,7 +54,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(limiter);
 
-app.use('/', indexRouter);
+// app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/catalog", catalogRouter); // Add catalog routes to middleware chain.
 
