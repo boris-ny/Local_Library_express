@@ -7,18 +7,18 @@ const compression = require("compression");
 const helmet = require("helmet");
 require('dotenv').config();
 
-// const indexRouter = require('./routes/index');
+const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const catalogRouter = require("./routes/catalog"); //Import routes for "catalog" area of site
 
 const app = express();
 
-const router = express.Router();
-app.use("/public",express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 // view engine setup
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
-router.get("/",(req, res) => res.render("test"))
+app.use(express.static(path.join(__dirname, 'views')));
+
 
 //Set up Rate limiter:maximum of twenty requests per minute
 
@@ -55,18 +55,20 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(limiter);
 
-// app.use('/', indexRouter);
+app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/catalog", catalogRouter); // Add catalog routes to middleware chain.
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
+
 });
 
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
+  console.log(err);
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
