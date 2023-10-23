@@ -3,6 +3,9 @@ const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
+const compression = require("compression");
+const helmet = require("helmet");
+require('dotenv').config();
 
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
@@ -10,9 +13,17 @@ const catalogRouter = require("./routes/catalog"); //Import routes for "catalog"
 
 const app = express();
 
+//Set up Rate limiter:maximum of twenty requests per minute
+
+const RateLimit = require("express-rate-limit");
+const limiter = RateLimit({
+  windowsMS: 1 * 60 * 1000,
+  max: 20,
+});
+
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = "mongodb://127.0.0.1:27017/local_library";
+const mongoDB = process.env.DB_URL;
 
 
 async function main() {
@@ -24,11 +35,19 @@ main().catch((err) => console.log(err));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    "script-src": ["self", "code.jquery.com", "cdn.jdeliver.net"],
+  },
+}));
+// Middleware Handlers
+app.use(compression()); // Compress all routes
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(limiter);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
