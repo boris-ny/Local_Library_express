@@ -26,7 +26,6 @@ const RateLimit = require("express-rate-limit");
 const limiter = RateLimit({
   windowsMS: 1 * 60 * 1000,
   max: 20,
-  val
 });
 
 const mongoose = require("mongoose");
