@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, 'views')));
-
+app.set("trust proxy", 1);
 
 //Set up Rate limiter:maximum of twenty requests per minute
 
@@ -26,6 +26,7 @@ const RateLimit = require("express-rate-limit");
 const limiter = RateLimit({
   windowsMS: 1 * 60 * 1000,
   max: 20,
+  val
 });
 
 const mongoose = require("mongoose");
