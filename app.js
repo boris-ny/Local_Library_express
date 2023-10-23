@@ -13,11 +13,12 @@ const catalogRouter = require("./routes/catalog"); //Import routes for "catalog"
 
 const app = express();
 
-app.use(express.static(path.join(__dirname, 'public')));
+const router = express.Router();
+app.use("/public",express.static(path.join(__dirname, 'public')));
 // view engine setup
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
-app.get("/",(req, res) => res.render("test"))
+router.get("/",(req, res) => res.render("test"))
 
 //Set up Rate limiter:maximum of twenty requests per minute
 
